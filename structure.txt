@@ -1,0 +1,43 @@
+app/
+├── Application/                        # Casos de uso (lógica de aplicación)
+│   └── User/
+│       ├── UseCases/
+│       │   ├── CreateUserUseCase.php
+│       │   ├── UpdateUserUseCase.php
+│       │   ├── DeleteUserUseCase.php
+│       │   └── GetUserUseCase.php
+│       └── DTOs/
+│           ├── CreateUserDTO.php
+│           └── UpdateUserDTO.php
+│
+├── Domain/                             # Núcleo del negocio (sin dependencias externas)
+│   └── User/
+│       ├── Entities/
+│       │   └── User.php               # Entidad de dominio (NO el modelo de Eloquent)
+│       ├── Repositories/
+│       │   └── UserRepositoryInterface.php   # Puerto (contrato)
+│       ├── ValueObjects/
+│       │   ├── UserId.php
+│       │   └── UserEmail.php
+│       └── Exceptions/
+│           ├── UserNotFoundException.php
+│           └── UserAlreadyExistsException.php
+│
+├── Infrastructure/                     # Implementaciones concretas (frameworks, DB, etc.)
+│   └── User/
+│       ├── Persistence/
+│       │   ├── EloquentUserRepository.php    # Implementación del puerto
+│       │   └── UserModel.php                 # Modelo Eloquent
+│       └── Providers/
+│           └── UserServiceProvider.php       # Bindea la interfaz con la implementación
+│
+└── Interfaces/                         # Entrada al sistema (HTTP, CLI, etc.)
+    └── Http/
+        └── User/
+            ├── Controllers/
+            │   └── UserController.php
+            ├── Requests/
+            │   ├── CreateUserRequest.php
+            │   └── UpdateUserRequest.php
+            └── Resources/
+                └── UserResource.php          # Transforma la respuesta JSON
