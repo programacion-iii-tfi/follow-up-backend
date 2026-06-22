@@ -20,11 +20,11 @@ class CreateUserUseCase
     {
         // Lógica de negocio acá (ej: verificar que no exista el email)
         $user = new UserEntity(
-            id:       UserId::generate(),
-            name:     new UserName($dto->name),
-            email:    new UserEmail($dto->email),
-            password: bcrypt($dto->password),
-            role:     UserRole::from($data['role'] ?? UserRole::ALUMNO->value),
+        id:       UserId::generate(),
+        name:     new UserName($dto->name),
+        email:    new UserEmail($dto->email),
+        password: bcrypt($dto->password),
+        role:     UserRole::from($dto->role),  // ← $dto->role, no $data['role']
         );
 
         return $this->userRepository->save($user);

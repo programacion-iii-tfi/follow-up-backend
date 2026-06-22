@@ -8,11 +8,13 @@ use Illuminate\Http\JsonResponse;
 use App\Application\User\DTOs\CreateUserDTO;
 use App\Interfaces\Http\User\Resources\UserResource;
 use App\Interfaces\Http\User\Requests\CreateUserRequest;
+use App\Application\User\UseCases\GetAllUsersUseCase;
 
 class UserController extends Controller
 {
     public function __construct(
-        private readonly CreateUserUseCase $createUserUseCase
+        private readonly CreateUserUseCase  $createUserUseCase,
+        private readonly GetAllUsersUseCase $getAllUsersUseCase,
     ) {}
 
     public function store(CreateUserRequest $request): JsonResponse
@@ -25,7 +27,8 @@ class UserController extends Controller
 
     public function index(): JsonResponse
     {
-        
-        return response()->json(['message' => 'List of users']);
+        $users = $this->getAllUsersUseCase->execute();
+
+        return response()->json(UserResource::collection($users), 200);
     }
 }

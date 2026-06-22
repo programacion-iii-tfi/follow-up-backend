@@ -2,11 +2,13 @@
 
 namespace App\Infrastructure\User\Persistence;
 
+use App\Application\User\DTOs\GetUserDTO;
 use App\Domain\User\Entities\User;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Domain\User\ValueObjects\UserEmail;
 use App\Domain\User\ValueObjects\UserId;
 use App\Domain\User\ValueObjects\UserName;
+use App\Domain\User\ValueObjects\UserRole;
 
 class EloquentUserRepository implements UserRepositoryInterface
 {
@@ -18,7 +20,7 @@ class EloquentUserRepository implements UserRepositoryInterface
                 'name'     => $user->name()->value(),
                 'email'    => $user->email()->value(),
                 'password' => $user->password(),
-                'role'     => $user->role()->label(),
+                'role'     => $user->role()->value,  // ← value, no label()
             ]
         );
 
@@ -47,7 +49,7 @@ class EloquentUserRepository implements UserRepositoryInterface
     public function all(): array
     {
         return UserModel::all()
-            ->map(fn (UserModel $model) => $this->toDomain($model))
+            ->map(fn(UserModel $model) => $this->toDomain($model))
             ->toArray();
     }
 

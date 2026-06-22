@@ -15,10 +15,10 @@ class CreateUserDTO
     public static function fromArray(array $data): self
     {
         return new self(
-            name:  $data['name'],
-            email: $data['email'],
-            password: $data['password'],
-            role:  $data['role'] ?? UserRole::ALUMNO->value,
+        name:     $data['name'],
+        email:    $data['email'],
+        password: $data['password'],
+        role: UserRole::from(strtolower($data['role'] ?? UserRole::ALUMNO->value))->value,
         );
     }
 }
