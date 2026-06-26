@@ -17,7 +17,7 @@ class LoginUserUseCase
 
     public function execute(LoginUserDTO $dto): array
     {
-        $user = $this->userRepository->findByEmail(new UserEmail($dto->email));
+        $user = $this->userRepository->findByEmail(new UserEmail($dto->username));
 
         if (!$user || !Hash::check($dto->password, $user->password())) {
             throw ValidationException::withMessages([
@@ -25,7 +25,7 @@ class LoginUserUseCase
             ]);
         }
 
-        $model = UserModel::where('email', $dto->email)->first();
+        $model = UserModel::where('email', $dto->username)->first();
         $model->tokens()->delete();
         $token = $model->createToken('api-token')->plainTextToken;
 

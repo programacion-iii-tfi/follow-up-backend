@@ -2,12 +2,10 @@
 
 namespace App\Infrastructure\User\Persistence;
 
-use App\Application\User\DTOs\GetUserDTO;
 use App\Domain\User\Entities\User;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Domain\User\ValueObjects\UserEmail;
 use App\Domain\User\ValueObjects\UserId;
-use App\Domain\User\ValueObjects\UserName;
 use App\Domain\User\ValueObjects\UserRole;
 
 class EloquentUserRepository implements UserRepositoryInterface
@@ -17,10 +15,14 @@ class EloquentUserRepository implements UserRepositoryInterface
         $model = UserModel::updateOrCreate(
             ['id' => $user->id()->value()],
             [
-                'name'     => $user->name()->value(),
-                'email'    => $user->email()->value(),
-                'password' => $user->password(),
-                'role'     => $user->role()->value,  // ← value, no label()
+                'first_name' => $user->firstName(),
+                'last_name'  => $user->lastName(),
+                'dni'        => $user->dni(),
+                'telephone'  => $user->telephone(),
+                'address'    => $user->address(),
+                'password'   => $user->password(),
+                'role'       => $user->role(),
+                'must_change_password' => $user->mustChangePassword(),
             ]
         );
 
@@ -56,11 +58,15 @@ class EloquentUserRepository implements UserRepositoryInterface
     private function toDomain(UserModel $model): User
     {
         return new User(
-            id:       new UserId((string) $model->id),
-            name:     new UserName($model->name),
-            email:    new UserEmail($model->email),
-            password: $model->password,
-            role:     $model->role,
+            new UserId($model->id),
+            $model->first_name,
+            $model->last_name,
+            $model->dni,
+            $model->telephone,
+            $model->address,
+            $model->password,
+            UserRole::from($model->role),
+            $model->must_change_password
         );
     }
 }

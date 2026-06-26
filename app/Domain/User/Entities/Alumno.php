@@ -1,0 +1,55 @@
+<?php
+
+namespace App\Domain\User\Entities;
+
+use App\Domain\User\ValueObjects\UserId;
+use App\Domain\User\ValueObjects\UserName;
+use App\Domain\User\ValueObjects\UserRole;
+use App\Domain\User\ValueObjects\CodigoInstitucional;
+
+class Alumno extends User
+{
+    public function __construct(
+        UserId $id,
+        string $first_name,
+        string $last_name,
+        string $password,
+        int $dni,
+        string $telephone,
+        string $address,
+        private UserName $username,
+        private string $anio_ingreso,
+        private CodigoInstitucional $codigo_institucional,
+        private string $education_level,
+    ) {
+        parent::__construct($id, $first_name, $last_name, $dni, $telephone, $address, $password, UserRole::ALUMNO);
+    }
+
+    public function username(): string { return $this->username; }
+
+    public function anioIngreso(): string { return $this->anio_ingreso; }
+
+    public function codigoInstitucional(): string { return $this->codigo_institucional; }
+
+    public function educationLevel(): string { return $this->education_level; }
+
+    public function setUsername(string $username): void
+    {
+        $this->username = new UserName($username);
+    }
+
+    public function setAnioIngreso(string $anio_ingreso): void
+    {
+        $this->anio_ingreso = $anio_ingreso;
+    }
+
+    public function setCodigoInstitucional(CodigoInstitucional $codigo_institucional): void
+    {
+        $this->codigo_institucional = $codigo_institucional;
+    }
+
+    public function setEducationLevel(string $education_level): void
+    {
+        $this->education_level = $education_level;
+    }
+}

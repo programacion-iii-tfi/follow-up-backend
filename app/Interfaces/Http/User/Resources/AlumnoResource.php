@@ -9,7 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /**
  * @mixin User
  */
-class UserResource extends JsonResource
+class AlumnoResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
@@ -19,6 +19,7 @@ class UserResource extends JsonResource
             'id'    => $user->id()->value(),
             'firstName'  => $user->firstName(),
             'lastName' => $user->lastName(),
+            'dni' => $user->dni(),
             'role' =>   $user->role()->value,
         ];
     }

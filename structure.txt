@@ -1,43 +1,88 @@
 app/
-├── Application/                        # Casos de uso (lógica de aplicación)
-│   └── User/
-│       ├── UseCases/
-│       │   ├── CreateUserUseCase.php
-│       │   ├── UpdateUserUseCase.php
-│       │   ├── DeleteUserUseCase.php
-│       │   └── GetUserUseCase.php
-│       └── DTOs/
-│           ├── CreateUserDTO.php
-│           └── UpdateUserDTO.php
+├── Application/
+│   ├── User/
+│   │   ├── DTOs/
+│   │   │   ├── CreateUserDTO.php
+│   │   │   └── LoginUserDTO.php
+│   │   └── UseCases/
+│   │       ├── CreateUserUseCase.php
+│   │       ├── LoginUserUseCase.php
+│   │       └── GetAllUsersUseCase.php
+│   ├── Alumno/
+│   │   ├── DTOs/
+│   │   │   └── CreateAlumnoDTO.php
+│   │   └── UseCases/
+│   │       ├── CreateAlumnoUseCase.php
+│   │       └── GetAllAlumnosUseCase.php
+│   ├── Docente/
+│   │   ├── DTOs/
+│   │   │   └── CreateDocenteDTO.php
+│   │   └── UseCases/
+│   │       ├── CreateDocenteUseCase.php
+│   │       └── GetAllDocentesUseCase.php
+│   └── Tutor/
+│       ├── DTOs/
+│       │   └── RegisterTutorDTO.php
+│       └── UseCases/
+│           ├── RegisterTutorUseCase.php
+│           └── GetAllTutoresUseCase.php
 │
-├── Domain/                             # Núcleo del negocio (sin dependencias externas)
-│   └── User/
-│       ├── Entities/
-│       │   └── User.php               # Entidad de dominio (NO el modelo de Eloquent)
-│       ├── Repositories/
-│       │   └── UserRepositoryInterface.php   # Puerto (contrato)
-│       ├── ValueObjects/
-│       │   ├── UserId.php
-│       │   └── UserEmail.php
-│       └── Exceptions/
-│           ├── UserNotFoundException.php
-│           └── UserAlreadyExistsException.php
+├── Domain/
+│   ├── User/
+│   │   ├── Entities/
+│   │   │   ├── User.php           ← abstract base
+│   │   │   ├── Alumno.php
+│   │   │   ├── Docente.php
+│   │   │   └── Tutor.php
+│   │   ├── Repositories/
+│   │   │   ├── UserRepositoryInterface.php
+│   │   │   ├── AlumnoRepositoryInterface.php
+│   │   │   ├── DocenteRepositoryInterface.php
+│   │   │   └── TutorRepositoryInterface.php
+│   │   └── ValueObjects/
+│   │       ├── UserId.php
+│   │       ├── UserName.php
+│   │       ├── UserEmail.php
+│   │       ├── UserRole.php
+│   │       ├── UserUsername.php   ← EST-DNI-AÑO / DOC-DNI-AÑO
+│   │       └── CodigoInstitucional.php
+│   │
+├── Infrastructure/
+│   ├── User/
+│   │   └── Persistence/
+│   │       ├── UserModel.php
+│   │       ├── AlumnoModel.php
+│   │       ├── DocenteModel.php
+│   │       ├── TutorModel.php
+│   │       └── Eloquent/
+│   │           ├── EloquentUserRepository.php
+│   │           ├── EloquentAlumnoRepository.php
+│   │           ├── EloquentDocenteRepository.php
+│   │           └── EloquentTutorRepository.php
+│   └── Providers/
+│       ├── UserServiceProvider.php
+│       ├── AlumnoServiceProvider.php
+│       ├── DocenteServiceProvider.php
+│       └── TutorServiceProvider.php
 │
-├── Infrastructure/                     # Implementaciones concretas (frameworks, DB, etc.)
-│   └── User/
-│       ├── Persistence/
-│       │   ├── EloquentUserRepository.php    # Implementación del puerto
-│       │   └── UserModel.php                 # Modelo Eloquent
-│       └── Providers/
-│           └── UserServiceProvider.php       # Bindea la interfaz con la implementación
-│
-└── Interfaces/                         # Entrada al sistema (HTTP, CLI, etc.)
+└── Interfaces/
     └── Http/
+        ├── Controller.php
         └── User/
             ├── Controllers/
-            │   └── UserController.php
+            │   ├── UserController.php
+            │   ├── AlumnoController.php
+            │   ├── DocenteController.php
+            │   ├── TutorController.php
+            │   └── AuthController.php
             ├── Requests/
             │   ├── CreateUserRequest.php
-            │   └── UpdateUserRequest.php
+            │   ├── CreateAlumnoRequest.php
+            │   ├── CreateDocenteRequest.php
+            │   ├── RegisterTutorRequest.php
+            │   └── LoginRequest.php
             └── Resources/
-                └── UserResource.php          # Transforma la respuesta JSON
+                ├── UserResource.php
+                ├── AlumnoResource.php
+                ├── DocenteResource.php
+                └── TutorResource.php

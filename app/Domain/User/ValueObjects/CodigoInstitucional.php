@@ -4,7 +4,7 @@ namespace App\Domain\User\ValueObjects;
 
 use InvalidArgumentException;
 
-class UserName
+class CodigoInstitucional
 {
     private string $value;
 
@@ -13,11 +13,11 @@ class UserName
         $trimmed = trim($value);
 
         if (empty($trimmed)) {
-            throw new InvalidArgumentException('El nombre de usuario no puede estar vacío');
+            throw new InvalidArgumentException('El código institucional no puede estar vacío');
         }
 
-        if (strlen($trimmed) > 255) {
-            throw new InvalidArgumentException('El nombre de usuario no puede tener más de 255 caracteres');
+        if (strlen($trimmed) > 15) {
+            throw new InvalidArgumentException('El código institucional no puede tener más de 15 caracteres');
         }
 
         $this->value = $trimmed;
@@ -38,8 +38,8 @@ class UserName
         return $this->value;
     }
 
-    public function defaultValue(string $tipo, string $dni, string $anio): string
+    public function generateCodigo(): string
     {
-        return sprintf('%s-%s-%s', strtoupper($tipo), strtoupper($dni), strtoupper($anio));
+        return sprintf('ALU-%s-%s', strtoupper(uniqid()), strtoupper(substr(md5((string)microtime(true)), 0, 5)));
     }
 }

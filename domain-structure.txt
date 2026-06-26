@@ -1,0 +1,40 @@
+users
+├── id (uuid)
+├── nombre
+├── apellido
+├── dni
+├── telefono
+├── direccion
+├── password
+├── role
+├── must_change_password (bool)
+└── timestamps
+
+alumnos
+├── id (uuid)
+├── user_id (uuid FK → users)
+├── username          (EST-DNI-AÑO)
+├── legajo
+├── carrera
+├── año_ingreso
+├── codigo_institucional
+└── timestamps
+
+docentes
+├── id (uuid)
+├── user_id (uuid FK → users)
+├── username          (DOC-DNI-AÑO)
+├── legajo
+└── timestamps
+
+tutores
+├── id (uuid)
+├── user_id (uuid FK → users)
+├── email
+├── relacion          (padre, madre, tutor legal, etc.)
+└── timestamps
+
+tutor_alumno          (pivot)
+├── tutor_id (uuid FK → tutores)
+├── alumno_id (uuid FK → alumnos)
+└── timestamps

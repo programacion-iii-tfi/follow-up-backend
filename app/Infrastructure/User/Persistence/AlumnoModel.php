@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 
-class UserModel extends Authenticatable
+class AlumnoModel extends Authenticatable
 {
     use HasApiTokens, HasUuids;
 
-    protected $table = 'users';
+    protected $table = 'alumnos';
 
     public $incrementing = false;
 
@@ -38,7 +38,6 @@ class UserModel extends Authenticatable
     {
         return [
             'password'             => 'hashed',
-            'role'                 => UserRole::class,
             'must_change_password' => 'boolean',
         ];
     }
