@@ -5,13 +5,12 @@ namespace App\Infrastructure\User\Persistence;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class AlumnoModel extends Model
+class DocenteModel extends Model
 {
     use HasUuids;
 
-    protected $table = 'alumnos';
+    protected $table = 'docentes';
 
     public $incrementing = false;
 
@@ -21,9 +20,7 @@ class AlumnoModel extends Model
         'id',
         'user_id',
         'username',
-        'nivel_educativo',
-        'año_ingreso',
-        'codigo_institucional',
+        'fecha_ingreso',
     ];
 
     public function user(): BelongsTo
@@ -31,8 +28,10 @@ class AlumnoModel extends Model
         return $this->belongsTo(UserModel::class, 'user_id');
     }
 
-    public function tutores(): BelongsToMany
+    protected function casts(): array
     {
-        return $this->belongsToMany(TutorModel::class, 'tutor_alumno', 'alumno_id', 'tutor_id');
+        return [
+            'fecha_ingreso' => 'date',
+        ];
     }
 }

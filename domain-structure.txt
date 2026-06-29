@@ -14,7 +14,6 @@ alumnos
 ├── id (uuid)
 ├── user_id (uuid FK → users)
 ├── username          (EST-DNI-AÑO)
-├── legajo
 ├── carrera
 ├── año_ingreso
 ├── codigo_institucional
@@ -24,7 +23,6 @@ docentes
 ├── id (uuid)
 ├── user_id (uuid FK → users)
 ├── username          (DOC-DNI-AÑO)
-├── legajo
 └── timestamps
 
 tutores

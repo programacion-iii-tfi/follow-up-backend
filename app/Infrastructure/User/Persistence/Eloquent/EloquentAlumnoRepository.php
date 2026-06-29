@@ -9,65 +9,85 @@ use App\Domain\User\ValueObjects\UserName;
 
 class EloquentAlumnoRepository implements AlumnoRepositoryInterface
 {
-    public function save(Alumno $user): Alumno
+    public function save(Alumno $alumno): Alumno
     {
-        $model = AlumnoModel::updateOrCreate(
-            ['id' => $user->id()->value()],
+        $userModel = UserModel::updateOrCreate(
+            ['id' => $alumno->id()->value()],
             [
-                'first_name' => $user->firstName(),
-                'last_name' => $user->lastName(),
-                'dni' => $user->dni(),
-                'telephone' => $user->telephone(),
-                'address' => $user->address(),
-                'password' => $user->password(),
-                'role' => $user->role()->value,
-                'must_change_password' => $user->mustChangePassword(),
+                'first_name'           => $alumno->firstName(),
+                'last_name'            => $alumno->lastName(),
+                'dni'                  => $alumno->dni(),
+                'telephone'            => $alumno->telephone(),
+                'address'              => $alumno->address(),
+                'password'             => $alumno->password(),
+                'role'                 => $alumno->role()->value,
+                'must_change_password' => $alumno->mustChangePassword(),
             ]
         );
 
-        return $this->toDomain($model);
+        $alumnoModel = AlumnoModel::updateOrCreate(
+            ['user_id' => $userModel->id],
+            [
+                'username'              => $alumno->username(),
+                'nivel_educativo'       => $alumno->educationLevel(),
+                'anio_ingreso'          => $alumno->anioIngreso(),
+                'codigo_institucional'  => $alumno->codigoInstitucional(),
+            ]
+        );
+
+        return $this->toDomain($userModel, $alumnoModel);
     }
 
     public function findById(UserId $id): ?Alumno
     {
-        $model = AlumnoModel::find($id->value());
+        $userModel = UserModel::find($id->value());
 
-        return $model ? $this->toDomain($model) : null;
+        if (!$userModel) return null;
+
+        $alumnoModel = AlumnoModel::where('user_id', $userModel->id)->first();
+
+        return $alumnoModel ? $this->toDomain($userModel, $alumnoModel) : null;
     }
 
     public function findByUsername(string $username): ?Alumno
     {
-        $model = AlumnoModel::where('username', $username)->first();
+        $alumnoModel = AlumnoModel::where('username', $username)->first();
 
-        return $model ? $this->toDomain($model) : null;
+        if (!$alumnoModel) return null;
+
+        $userModel = UserModel::find($alumnoModel->user_id);
+
+        return $userModel ? $this->toDomain($userModel, $alumnoModel) : null;
     }
 
     public function all(): array
     {
-        return AlumnoModel::all()
-            ->map(fn(AlumnoModel $model) => $this->toDomain($model))
+        return AlumnoModel::with('user')
+            ->get()
+            ->map(fn(AlumnoModel $model) => $this->toDomain($model->user, $model))
             ->toArray();
     }
 
     public function delete(UserId $id): void
     {
-        AlumnoModel::destroy($id->value());
+        // cascadeOnDelete en la migración se encarga de borrar alumnos también
+        UserModel::destroy($id->value());
     }
 
-    private function toDomain(AlumnoModel $model): Alumno
+    private function toDomain(UserModel $userModel, AlumnoModel $alumnoModel): Alumno
     {
         return new Alumno(
-            new UserId($model->id),
-            $model->first_name,
-            $model->last_name,
-            $model->dni,
-            $model->telephone,
-            $model->address,
-            $model->password,
-            new UserName($model->username),
-            $model->anio_ingreso,
-            $model->codigo_institucional,
-            $model->must_change_password
+            new UserId($userModel->id),
+            $userModel->first_name,
+            $userModel->last_name,
+            $userModel->dni,
+            $userModel->telephone,
+            $userModel->address,
+            $userModel->password,
+            $alumnoModel->username,
+            $alumnoModel->anio_ingreso,
+            $alumnoModel->codigo_institucional,
+            $alumnoModel->educational_level
         );
     }
 }

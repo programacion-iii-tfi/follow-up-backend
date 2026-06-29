@@ -21,7 +21,7 @@ class Tutor extends User
         private TutorAlumnoRelation $relationship,
         private ?string $otra_relacion,
     ) {
-        parent::__construct($id, $first_name, $last_name, $dni, $telephone, $address, $password, UserRole::TUTOR);
+        parent::__construct($id, $first_name, $last_name, $dni, $telephone, $address, $password, UserRole::TUTOR,false);
     }
 
     public function email(): UserEmail { return $this->email; }

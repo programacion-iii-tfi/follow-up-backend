@@ -5,7 +5,7 @@ namespace App\Interfaces\Http\User\Controllers;
 use App\Interfaces\Http\Controller;
 use App\Application\Alumno\UseCases\CreateAlumnoUseCase;
 use App\Application\Alumno\UseCases\GetAllAlumnosUseCase;
-use App\Application\User\DTOs\CreateAlumnoDTO;
+use App\Application\Alumno\DTOs\CreateAlumnoDTO;
 use Illuminate\Http\JsonResponse;
 use App\Interfaces\Http\User\Requests\CreateAlumnoRequest;
 use App\Interfaces\Http\User\Resources\AlumnoResource;

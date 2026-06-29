@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Domain\User\ValueObjects\TutorAlumnoRelation;
 
-class AlumnoModel extends Model
+class TutorModel extends Model
 {
     use HasUuids;
 
-    protected $table = 'alumnos';
+    protected $table = 'tutores';
 
     public $incrementing = false;
 
@@ -20,19 +21,30 @@ class AlumnoModel extends Model
     protected $fillable = [
         'id',
         'user_id',
-        'username',
-        'nivel_educativo',
-        'año_ingreso',
-        'codigo_institucional',
+        'email',
+        'relationship',
+        'otra_relacion',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'relationship' => TutorAlumnoRelation::class,
+        ];
+    }
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(UserModel::class, 'user_id');
     }
 
-    public function tutores(): BelongsToMany
+    public function alumnos(): BelongsToMany
     {
-        return $this->belongsToMany(TutorModel::class, 'tutor_alumno', 'alumno_id', 'tutor_id');
+        return $this->belongsToMany(
+            AlumnoModel::class,
+            'tutor_alumno',
+            'tutor_id',
+            'alumno_id'
+        )->withTimestamps();
     }
 }

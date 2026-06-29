@@ -3,10 +3,7 @@
 namespace App\Domain\User\Entities;
 
 use App\Domain\User\ValueObjects\UserId;
-use App\Domain\User\ValueObjects\UserEmail;
-use App\Domain\User\ValueObjects\UserName;
 use App\Domain\User\ValueObjects\UserRole;
-use Illuminate\Database\Eloquent\Model;
 
 class User
 {
@@ -19,7 +16,7 @@ class User
         private ?string  $address,
         private string  $password,
         private readonly UserRole $role,
-        private bool $must_change_password = true,
+        private bool $must_change_password,
     ) {}
 
     public function id(): UserId

@@ -22,7 +22,7 @@ class Alumno extends User
         private CodigoInstitucional $codigo_institucional,
         private string $education_level,
     ) {
-        parent::__construct($id, $first_name, $last_name, $dni, $telephone, $address, $password, UserRole::ALUMNO);
+        parent::__construct($id, $first_name, $last_name, $dni, $telephone, $address, $password, UserRole::ALUMNO,true);
     }
 
     public function username(): string { return $this->username; }
@@ -33,9 +33,9 @@ class Alumno extends User
 
     public function educationLevel(): string { return $this->education_level; }
 
-    public function setUsername(string $username): void
+    public function setUsername(string $dni, string $anio_ingreso): void
     {
-        $this->username = new UserName($username);
+        $this->username = new UserName('EST',$dni,$anio_ingreso);
     }
 
     public function setAnioIngreso(string $anio_ingreso): void

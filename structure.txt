@@ -33,6 +33,7 @@ app/
 │   │   │   ├── User.php           ← abstract base
 │   │   │   ├── Alumno.php
 │   │   │   ├── Docente.php
+|   |   |   ├── TutorAlumno.php
 │   │   │   └── Tutor.php
 │   │   ├── Repositories/
 │   │   │   ├── UserRepositoryInterface.php
