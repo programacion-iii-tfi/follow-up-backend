@@ -2,16 +2,14 @@
 
 namespace App\Infrastructure\User\Persistence;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use App\Domain\User\ValueObjects\UserRole;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
 
 class UserModel extends Authenticatable
 {
-    use HasApiTokens, HasFactory, HasUuids, Notifiable;
+    use HasApiTokens, HasUuids;
 
     protected $table = 'users';
 
@@ -21,10 +19,14 @@ class UserModel extends Authenticatable
 
     protected $fillable = [
         'id',
-        'name',
-        'email',
+        'first_name',
+        'last_name',
+        'dni',
+        'telephone',
+        'address',
         'password',
-        'role', 
+        'role',
+        'must_change_password',
     ];
 
     protected $hidden = [
@@ -35,9 +37,9 @@ class UserModel extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password'          => 'hashed',
-            'role'              => UserRole::class,
+            'password'             => 'hashed',
+            'role'                 => UserRole::class,
+            'must_change_password' => 'boolean',
         ];
     }
 }

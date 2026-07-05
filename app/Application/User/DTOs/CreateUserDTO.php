@@ -6,8 +6,11 @@ use App\Domain\User\ValueObjects\UserRole;
 class CreateUserDTO
 {
     public function __construct(
-        public readonly string $name,
-        public readonly string $email,
+        public readonly string $first_name,
+        public readonly string $last_name,
+        public readonly ?int $dni,
+        public readonly ?string $telephone,
+        public readonly ?string $address,
         public readonly string $password,
         public readonly string $role,
     ) {}
@@ -15,10 +18,13 @@ class CreateUserDTO
     public static function fromArray(array $data): self
     {
         return new self(
-            name:  $data['name'],
-            email: $data['email'],
-            password: $data['password'],
-            role:  $data['role'] ?? UserRole::ALUMNO->value,
+        first_name:     $data['first_name'],
+        last_name:      $data['last_name'],
+        dni:            $data['dni'] ?? null,
+        telephone:      $data['telephone'] ?? null,
+        address:        $data['address'] ?? null,
+        password: $data['password'],
+        role: UserRole::from(strtolower($data['role'] ?? UserRole::ALUMNO->value))->value,
         );
     }
 }
