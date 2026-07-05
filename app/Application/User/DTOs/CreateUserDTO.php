@@ -11,7 +11,6 @@ class CreateUserDTO
         public readonly ?int $dni,
         public readonly ?string $telephone,
         public readonly ?string $address,
-        public readonly string $username,
         public readonly string $password,
         public readonly string $role,
     ) {}
@@ -24,7 +23,6 @@ class CreateUserDTO
         dni:            $data['dni'] ?? null,
         telephone:      $data['telephone'] ?? null,
         address:        $data['address'] ?? null,
-        username: $data['username'],
         password: $data['password'],
         role: UserRole::from(strtolower($data['role'] ?? UserRole::ALUMNO->value))->value,
         );

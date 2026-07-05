@@ -61,4 +61,16 @@ class UserName
     {
         return sprintf('%s-%s-%s', strtoupper($tipo), strtoupper($dni), strtoupper($anio));
     }
+
+    public static function fromString(string $value): self
+    {
+        if (empty(trim($value))) {
+            throw new InvalidArgumentException('El username no puede estar vacío');
+        }
+
+        $instance = (new \ReflectionClass(self::class))->newInstanceWithoutConstructor();
+        $instance->value = $value;
+
+        return $instance;
+    }
 }

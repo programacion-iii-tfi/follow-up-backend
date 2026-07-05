@@ -20,11 +20,12 @@ class CreateUserUseCase
         id:       UserId::generate(),
         first_name:     $dto->first_name,
         last_name:      $dto->last_name,
-        dni:            $dto->dni,
-        telephone:      $dto->telephone,
-        address:        $dto->address,
+        dni:            $dto->dni ?? null,
+        telephone:      $dto->telephone ?? null,
+        address:        $dto->address ?? null,
         password: bcrypt($dto->password),
         role: UserRole::from(strtolower($dto->role)),
+        must_change_password: false
         );
 
         return $this->userRepository->save($user);

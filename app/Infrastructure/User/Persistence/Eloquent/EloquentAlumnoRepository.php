@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Infrastructure\User\Persistence;
+namespace App\Infrastructure\User\Persistence\Eloquent;
 
 use App\Domain\User\Entities\Alumno;
 use App\Domain\User\Repositories\AlumnoRepositoryInterface;
+use App\Domain\User\ValueObjects\CodigoInstitucional;
 use App\Domain\User\ValueObjects\UserId;
 use App\Domain\User\ValueObjects\UserName;
+use App\Infrastructure\User\Persistence\AlumnoModel;
+use App\Infrastructure\User\Persistence\UserModel;
 
 class EloquentAlumnoRepository implements AlumnoRepositoryInterface
 {
@@ -16,10 +19,10 @@ class EloquentAlumnoRepository implements AlumnoRepositoryInterface
             [
                 'first_name'           => $alumno->firstName(),
                 'last_name'            => $alumno->lastName(),
+                'password'             => $alumno->password(),
                 'dni'                  => $alumno->dni(),
                 'telephone'            => $alumno->telephone(),
                 'address'              => $alumno->address(),
-                'password'             => $alumno->password(),
                 'role'                 => $alumno->role()->value,
                 'must_change_password' => $alumno->mustChangePassword(),
             ]
@@ -29,7 +32,7 @@ class EloquentAlumnoRepository implements AlumnoRepositoryInterface
             ['user_id' => $userModel->id],
             [
                 'username'              => $alumno->username(),
-                'nivel_educativo'       => $alumno->educationLevel(),
+                'education_level'       => $alumno->educationLevel(),
                 'anio_ingreso'          => $alumno->anioIngreso(),
                 'codigo_institucional'  => $alumno->codigoInstitucional(),
             ]
@@ -68,7 +71,7 @@ class EloquentAlumnoRepository implements AlumnoRepositoryInterface
             ->toArray();
     }
 
-    public function delete(UserId $id): void
+    public function destroy(UserId $id): void
     {
         // cascadeOnDelete en la migración se encarga de borrar alumnos también
         UserModel::destroy($id->value());
@@ -77,17 +80,17 @@ class EloquentAlumnoRepository implements AlumnoRepositoryInterface
     private function toDomain(UserModel $userModel, AlumnoModel $alumnoModel): Alumno
     {
         return new Alumno(
-            new UserId($userModel->id),
-            $userModel->first_name,
-            $userModel->last_name,
-            $userModel->dni,
-            $userModel->telephone,
-            $userModel->address,
-            $userModel->password,
-            $alumnoModel->username,
-            $alumnoModel->anio_ingreso,
-            $alumnoModel->codigo_institucional,
-            $alumnoModel->educational_level
+            id:                   new UserId($userModel->id),
+            first_name:           $userModel->first_name,
+            last_name:            $userModel->last_name,
+            password:             $userModel->password,
+            dni:                  (int) $userModel->dni,
+            telephone:            $userModel->telephone,
+            address:              $userModel->address,
+            username:             UserName::fromString($alumnoModel->username),
+            anio_ingreso:         (int) $alumnoModel->anio_ingreso,
+            codigo_institucional: CodigoInstitucional::fromString($alumnoModel->codigo_institucional),
+            education_level:      $alumnoModel->education_level,
         );
     }
 }

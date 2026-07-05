@@ -30,7 +30,7 @@ class Docente extends User
         $this->fecha_ingreso = new FechaFormateada($fecha);
     }
 
-    public function username(): string { return $this->username; }
+    public function username(): string { return $this->username->value(); }
 
     public function setUsername(string $dni, string $fecha_ingreso): void
     {

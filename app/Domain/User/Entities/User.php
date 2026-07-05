@@ -34,17 +34,17 @@ class User
         return $this->last_name;
     }
 
-    public function dni(): int
+    public function dni(): ?int
     {
         return $this->dni;
     }
 
-    public function telephone(): string
+    public function telephone(): ?string
     {
         return $this->telephone;
     }
 
-    public function address(): string
+    public function address(): ?string
     {
         return $this->address;
     }

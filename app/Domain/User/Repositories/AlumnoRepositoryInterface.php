@@ -11,5 +11,5 @@ interface AlumnoRepositoryInterface
     public function findById(UserId $id): ?Alumno;
     public function findByUsername(string $username): ?Alumno;
     public function all(): array;
-    public function delete(UserId $id): void;
+    public function destroy(UserId $id): void;
 }

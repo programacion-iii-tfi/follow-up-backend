@@ -12,11 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->redirectGuestsTo(function ($request) {
-            if ($request->is('api/*')) {
-                return null;
-            }
-        });
+        $middleware->alias([
+        'role' => \App\Interfaces\Http\Middleware\EnsureUserHasRole::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->shouldRenderJsonWhen(fn ($request) => $request->is('api/*'));

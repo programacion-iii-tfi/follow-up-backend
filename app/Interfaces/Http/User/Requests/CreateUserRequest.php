@@ -15,10 +15,10 @@ class CreateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users',
-            'password' => 'required|min:8',
-            'role' => ['sometimes', 'string', 'in:' . implode(',', array_column(UserRole::cases(), 'value'))],
+            'first_name' => 'required|string|max:50',
+            'last_name'  => 'required|string|max:50',
+            'password'   => 'required|min:8',
+            'role'       => ['sometimes', 'string', 'in:' . implode(',', array_column(UserRole::cases(), 'value'))],
         ];
     }
 }

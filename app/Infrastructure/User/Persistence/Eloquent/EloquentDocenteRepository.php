@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Infrastructure\User\Persistence;
+namespace App\Infrastructure\User\Persistence\Eloquent;
 
 use App\Domain\Shared\ValueObjects\FechaFormateada;
 use App\Domain\User\Entities\Docente;
 use App\Domain\User\Repositories\DocenteRepositoryInterface;
 use App\Domain\User\ValueObjects\UserId;
+use App\Domain\User\ValueObjects\UserName;
+use App\Infrastructure\User\Persistence\DocenteModel;
+use App\Infrastructure\User\Persistence\UserModel;
 
 class EloquentDocenteRepository implements DocenteRepositoryInterface
 {
@@ -66,7 +69,7 @@ class EloquentDocenteRepository implements DocenteRepositoryInterface
             ->toArray();
     }
 
-    public function delete(UserId $id): void
+    public function destroy(UserId $id): void
     {
         // cascadeOnDelete en la migración se encarga de borrar docentes también
         UserModel::destroy($id->value());
@@ -78,12 +81,16 @@ class EloquentDocenteRepository implements DocenteRepositoryInterface
             new UserId($userModel->id),
             $userModel->first_name,
             $userModel->last_name,
-            $userModel->dni,
+            (int) $userModel->dni,
             $userModel->telephone,
             $userModel->address,
             $userModel->password,
-            $docenteModel->username,
-            FechaFormateada::fromDatabase($docenteModel->fecha_ingreso),
+            UserName::fromString($docenteModel->username),
+            FechaFormateada::fromDatabase(
+                $docenteModel->fecha_ingreso instanceof \DateTimeInterface
+                    ? $docenteModel->fecha_ingreso->format('Y-m-d')
+                    : $docenteModel->fecha_ingreso
+            ),
         );
     }
 }

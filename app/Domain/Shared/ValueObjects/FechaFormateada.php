@@ -45,10 +45,18 @@ class FechaFormateada
     }
 
     // Para construir desde la DB (yyyy-mm-dd)
-    public static function fromDatabase(string $fecha): self
+    public static function fromDatabase(string|\DateTimeInterface $fecha): self
     {
         $instance = new self('01/01/2000'); // instancia temporal
-        $parsed = DateTimeImmutable::createFromFormat('Y-m-d', $fecha);
+
+        if ($fecha instanceof \DateTimeInterface) {
+            $instance->fecha = \DateTimeImmutable::createFromInterface($fecha);
+            return $instance;
+        }
+
+        // Acepta tanto "Y-m-d" como "Y-m-d H:i:s" por si Eloquent devuelve con hora
+        $parsed = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $fecha)
+            ?: DateTimeImmutable::createFromFormat('Y-m-d', $fecha);
 
         if (!$parsed) {
             throw new InvalidArgumentException("Fecha inválida desde DB: {$fecha}");

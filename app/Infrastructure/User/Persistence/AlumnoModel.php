@@ -21,8 +21,8 @@ class AlumnoModel extends Model
         'id',
         'user_id',
         'username',
-        'nivel_educativo',
-        'año_ingreso',
+        'education_level',
+        'anio_ingreso',
         'codigo_institucional',
     ];
 

@@ -3,7 +3,7 @@
 namespace App\Infrastructure\User\Providers;
 
 use App\Domain\User\Repositories\AlumnoRepositoryInterface;
-use App\Infrastructure\User\Persistence\EloquentAlumnoRepository;
+use App\Infrastructure\User\Persistence\Eloquent\EloquentAlumnoRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AlumnoServiceProvider extends ServiceProvider

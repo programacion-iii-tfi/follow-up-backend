@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Alumno\UseCases;
+namespace App\Application\Docente\UseCases;
 
 use App\Application\Docente\DTOs\CreateDocenteDTO;
 use App\Domain\Shared\ValueObjects\FechaFormateada;

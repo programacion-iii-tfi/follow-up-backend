@@ -10,18 +10,19 @@ use App\Domain\User\ValueObjects\UserRole;
 class Tutor extends User
 {
     public function __construct(
-        UserId   $id,
-        string $first_name,
-        string $last_name,
-        string $password,
-        int $dni,
-        string $telephone,
-        string $address,
-        private UserEmail $email,
+        UserId              $id,
+        string              $first_name,
+        string              $last_name,
+        int                 $dni,
+        string              $telephone,
+        string              $address,
+        string              $password,
+        private UserEmail           $email,
         private TutorAlumnoRelation $relationship,
-        private ?string $otra_relacion,
+        private ?string             $otra_relacion,
     ) {
-        parent::__construct($id, $first_name, $last_name, $dni, $telephone, $address, $password, UserRole::TUTOR,false);
+        $this->validateRelationship($relationship, $otra_relacion);
+        parent::__construct($id, $first_name, $last_name, $dni, $telephone, $address, $password, UserRole::TUTOR, false);
     }
 
     public function email(): UserEmail { return $this->email; }
@@ -35,13 +36,21 @@ class Tutor extends User
         $this->email = new UserEmail($email);
     }
 
-    public function setRelationship(TutorAlumnoRelation $relationship): void
+    public function setRelationship(TutorAlumnoRelation $relationship, ?string $otraRelacion = null): void
     {
-        $this->relationship = $relationship;
+        $this->validateRelationship($relationship,$otraRelacion);
+        $this->relationship  = $relationship;
+        $this->otra_relacion = $otraRelacion;
     }
 
-    public function setOtraRelacion(?string $otra_relacion): void
+    private function validateRelationship(TutorAlumnoRelation $relationship, ?string $otraRelacion): void
     {
-        $this->otra_relacion = $otra_relacion;
+        if ($relationship === TutorAlumnoRelation::OTRA && empty($otraRelacion)) {
+            throw new \InvalidArgumentException("Debe especificar la relación cuando selecciona 'Otra'.");
+        }
+
+        if ($relationship !== TutorAlumnoRelation::OTRA && $otraRelacion !== null) {
+            throw new \InvalidArgumentException("El campo 'otra relación' solo aplica cuando la relación es 'Otra'.");
+        }
     }
 }

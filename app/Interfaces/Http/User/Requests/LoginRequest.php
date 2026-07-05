@@ -2,7 +2,9 @@
 
 namespace App\Interfaces\Http\User\Requests;
 
+use App\Domain\User\ValueObjects\UserRole;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class LoginRequest extends FormRequest
 {
@@ -11,8 +13,9 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email'    => ['required', 'email'],
+            'username'    => ['required', 'string'],
             'password' => ['required', 'string'],
+            'role'     => ['required', Rule::in(array_column(UserRole::cases(), 'value'))]
         ];
     }
 }

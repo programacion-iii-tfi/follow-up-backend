@@ -6,14 +6,14 @@ enum TutorAlumnoRelation: string
 {
     case PADRE        = 'padre';
     case MADRE        = 'madre';
-    case OTRO         = 'otro';
+    case OTRA         = 'otra';
 
     public function label(): string
     {
         return match($this) {
             TutorAlumnoRelation::PADRE => 'Padre',
             TutorAlumnoRelation::MADRE => 'Madre',
-            TutorAlumnoRelation::OTRO  => 'Otro',
+            TutorAlumnoRelation::OTRA  => 'Otra',
         };
     }
 }

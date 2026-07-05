@@ -13,32 +13,32 @@ class Alumno extends User
         UserId $id,
         string $first_name,
         string $last_name,
-        string $password,
         int $dni,
         string $telephone,
         string $address,
+        string $password,
         private UserName $username,
-        private string $anio_ingreso,
+        private int $anio_ingreso,
         private CodigoInstitucional $codigo_institucional,
         private string $education_level,
     ) {
         parent::__construct($id, $first_name, $last_name, $dni, $telephone, $address, $password, UserRole::ALUMNO,true);
     }
 
-    public function username(): string { return $this->username; }
+    public function username(): string { return $this->username->value(); }
 
-    public function anioIngreso(): string { return $this->anio_ingreso; }
+    public function anioIngreso(): int { return $this->anio_ingreso; }
 
-    public function codigoInstitucional(): string { return $this->codigo_institucional; }
+    public function codigoInstitucional(): string { return $this->codigo_institucional->value(); }
 
     public function educationLevel(): string { return $this->education_level; }
 
-    public function setUsername(string $dni, string $anio_ingreso): void
+    public function setUsername(int $dni, int $anio_ingreso): void
     {
         $this->username = new UserName('EST',$dni,$anio_ingreso);
     }
 
-    public function setAnioIngreso(string $anio_ingreso): void
+    public function setAnioIngreso(int $anio_ingreso): void
     {
         $this->anio_ingreso = $anio_ingreso;
     }

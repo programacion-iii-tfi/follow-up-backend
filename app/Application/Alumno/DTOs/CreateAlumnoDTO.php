@@ -7,11 +7,10 @@ class CreateAlumnoDTO
     public function __construct(
         public readonly string $first_name,
         public readonly string $last_name,
-        public readonly ?int $dni,
+        public readonly ?string $dni,
         public readonly ?string $telephone,
         public readonly ?string $address,
         public readonly string $anio_ingreso,
-        public readonly string $codigo_institucional,
         public readonly string $education_level,
     ) {}
 
@@ -24,7 +23,6 @@ class CreateAlumnoDTO
         telephone:      $data['telephone'] ?? null,
         address:        $data['address'] ?? null,
         anio_ingreso:   $data['anio_ingreso'],
-        codigo_institucional: $data['codigo_institucional'],
         education_level: $data['education_level'],
         );
     }

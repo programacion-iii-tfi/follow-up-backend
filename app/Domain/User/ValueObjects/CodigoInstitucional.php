@@ -8,19 +8,28 @@ class CodigoInstitucional
 {
     private string $value;
 
-    public function __construct(string $value)
+    public function __construct()
     {
-        $trimmed = trim($value);
+        $codigoInst = $this->generateCodigo();
 
-        if (empty($trimmed)) {
+        if (empty($codigoInst)) {
             throw new InvalidArgumentException('El código institucional no puede estar vacío');
         }
 
-        if (strlen($trimmed) > 15) {
-            throw new InvalidArgumentException('El código institucional no puede tener más de 15 caracteres');
+        $this->value = $codigoInst;
+    }
+
+    public static function fromString(string $value): self
+    {
+        if (empty(trim($value))) {
+            throw new InvalidArgumentException('El código institucional no puede estar vacío');
         }
 
-        $this->value = $trimmed;
+        // Evita pasar por el constructor normal, que siempre genera un código nuevo
+        $instance = (new \ReflectionClass(self::class))->newInstanceWithoutConstructor();
+        $instance->value = $value;
+
+        return $instance;
     }
 
     public function value(): string
@@ -38,7 +47,7 @@ class CodigoInstitucional
         return $this->value;
     }
 
-    public function generateCodigo(): string
+    private function generateCodigo(): string
     {
         return sprintf('ALU-%s-%s', strtoupper(uniqid()), strtoupper(substr(md5((string)microtime(true)), 0, 5)));
     }

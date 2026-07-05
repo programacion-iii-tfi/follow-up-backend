@@ -14,14 +14,13 @@ class CreateAlumnoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name'           => ['required', 'string', 'max:255'],
-            'last_name'            => ['required', 'string', 'max:255'],
-            'dni'                  => ['required', 'string', 'unique:users,dni'],
-            'telephone'            => ['required', 'string', 'max:20'],
-            'address'              => ['required', 'string', 'max:255'],
-            'legajo'               => ['required', 'string', 'unique:alumnos,legajo'],
-            'carrera'              => ['required', 'string', 'max:255'],
-            'año_ingreso'          => ['required', 'integer', 'min:2000', 'max:' . date('Y')],
+            'first_name'          => ['required', 'string', 'max:255'],
+            'last_name'           => ['required', 'string', 'max:255'],
+            'dni'                 => ['required', 'integer', 'unique:users,dni'],
+            'telephone'           => ['required', 'string', 'max:20'],
+            'address'             => ['required', 'string', 'max:255'],
+            'education_level'     => ['required', 'string', 'max:255'],
+            'anio_ingreso'        => ['required', 'integer', 'min:2000', 'max:' . date('Y')],
         ];
     }
 }
