@@ -21,11 +21,9 @@ class AlumnoResource extends JsonResource
             'first_name'          => $alumno->firstName(),
             'last_name'           => $alumno->lastName(),
             'dni'                 => $alumno->dni(),
-            'telephone'           => $alumno->telephone(),
-            'address'             => $alumno->address(),
             'username'            => $alumno->username(),
-            'education_level'     => $alumno->educationLevel(),
-            'anio_ingreso'        => $alumno->anioIngreso(),
+            'curso_division'      => $alumno->cursoDivisionTurno()->__toString(),
+            'fecha_nacimiento'    => $alumno->fechaNacimiento()->toDisplay(),
             'role'                => $alumno->role()->value,
         ];
     }

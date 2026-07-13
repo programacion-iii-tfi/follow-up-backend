@@ -14,7 +14,7 @@ class Admin extends User
         string $password,
         private string $username,
     ) {
-        parent::__construct($id, $first_name, $last_name,null, null, null, $password, UserRole::ADMINISTRADOR,false);
+        parent::__construct($id, $first_name, $last_name,null, $username, $password, UserRole::ADMINISTRADOR,false);
     }
 
     public function username(): string { return $this->username; }

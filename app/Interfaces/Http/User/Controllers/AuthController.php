@@ -19,10 +19,7 @@ class AuthController extends Controller
         $dto    = LoginUserDTO::fromArray($request->validated());
         $result = $this->loginUserUseCase->execute($dto);
 
-        return response()->json([
-            'token' => $result['token'],
-            'rol'  => $result['rol'],
-        ], 200);
+        return response()->json($result, 200);
     }
 
     // public function logout(): JsonResponse

@@ -4,9 +4,6 @@ namespace App\Infrastructure\User\Persistence;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use App\Domain\User\ValueObjects\TutorAlumnoRelation;
 
 class TutorModel extends Model
 {
@@ -15,36 +12,21 @@ class TutorModel extends Model
     protected $table = 'tutores';
 
     public $incrementing = false;
-
     protected $keyType = 'string';
 
     protected $fillable = [
         'id',
-        'user_id',
+        'telephone',
         'email',
-        'relationship',
-        'otra_relacion',
     ];
 
-    protected function casts(): array
+    public function user()
     {
-        return [
-            'relationship' => TutorAlumnoRelation::class,
-        ];
+        return $this->belongsTo(UserModel::class, 'id', 'id');
     }
 
-    public function user(): BelongsTo
+    public function tutorAlumnos()
     {
-        return $this->belongsTo(UserModel::class, 'user_id');
-    }
-
-    public function alumnos(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            AlumnoModel::class,
-            'tutor_alumno',
-            'tutor_id',
-            'alumno_id'
-        )->withTimestamps();
+        return $this->hasMany(TutorAlumnoModel::class, 'tutor_id', 'id');
     }
 }

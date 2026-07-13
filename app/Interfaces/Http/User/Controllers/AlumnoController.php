@@ -8,8 +8,8 @@ use App\Application\Alumno\UseCases\GetAllAlumnosUseCase;
 use App\Application\Alumno\DTOs\CreateAlumnoDTO;
 use App\Domain\User\Repositories\AlumnoRepositoryInterface;
 use App\Domain\User\ValueObjects\UserId;
-use Illuminate\Http\JsonResponse;
 use App\Interfaces\Http\User\Requests\CreateAlumnoRequest;
+use Illuminate\Http\JsonResponse;
 use App\Interfaces\Http\User\Resources\AlumnoResource;
 
 class AlumnoController extends Controller

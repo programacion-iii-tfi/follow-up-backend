@@ -14,8 +14,7 @@ class LoginRequest extends FormRequest
     {
         return [
             'username'    => ['required', 'string'],
-            'password' => ['required', 'string'],
-            'role'     => ['required', Rule::in(array_column(UserRole::cases(), 'value'))]
+            'password' => ['required', 'string']
         ];
     }
 }

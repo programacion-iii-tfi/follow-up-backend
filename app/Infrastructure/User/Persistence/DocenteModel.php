@@ -4,7 +4,6 @@ namespace App\Infrastructure\User\Persistence;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DocenteModel extends Model
 {
@@ -13,25 +12,31 @@ class DocenteModel extends Model
     protected $table = 'docentes';
 
     public $incrementing = false;
-
     protected $keyType = 'string';
 
     protected $fillable = [
         'id',
-        'user_id',
-        'username',
+        'telephone',
         'fecha_ingreso',
+        'curso_division_turno_id',
     ];
 
-    public function user(): BelongsTo
+    protected $casts = [
+        'fecha_ingreso' => 'date',
+    ];
+
+    public function user()
     {
-        return $this->belongsTo(UserModel::class, 'user_id');
+        return $this->belongsTo(UserModel::class, 'id', 'id');
     }
 
-    protected function casts(): array
+    public function cursoDivisionTurno()
     {
-        return [
-            'fecha_ingreso' => 'date',
-        ];
+        return $this->belongsTo(CursoDivisionTurnoModel::class, 'curso_division_turno_id', 'id');
+    }
+
+    public function materias()
+    {
+        return $this->hasMany(MateriaModel::class, 'docente_id', 'id');
     }
 }

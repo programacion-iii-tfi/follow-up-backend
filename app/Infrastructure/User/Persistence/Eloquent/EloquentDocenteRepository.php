@@ -20,19 +20,19 @@ class EloquentDocenteRepository implements DocenteRepositoryInterface
                 'first_name'           => $docente->firstName(),
                 'last_name'            => $docente->lastName(),
                 'dni'                  => $docente->dni(),
-                'telephone'            => $docente->telephone(),
-                'address'              => $docente->address(),
                 'password'             => $docente->password(),
+                'username'             => $docente->username(),
                 'role'                 => $docente->role()->value,
                 'must_change_password' => $docente->mustChangePassword(),
             ]
         );
 
         $docenteModel = DocenteModel::updateOrCreate(
-            ['user_id' => $userModel->id],
+            ['id' => $userModel->id],
             [
-                'username'      => $docente->username(),
+                'telephone' => $docente->telephone(),
                 'fecha_ingreso' => $docente->fechaIngreso()->toDatabase(),
+                'curso_division_turno_id' => $docente->cursoDivisionTurno()
             ]
         );
 
@@ -45,7 +45,7 @@ class EloquentDocenteRepository implements DocenteRepositoryInterface
 
         if (!$userModel) return null;
 
-        $docenteModel = DocenteModel::where('user_id', $userModel->id)->first();
+        $docenteModel = DocenteModel::where('id', $userModel->id)->first();
 
         return $docenteModel ? $this->toDomain($userModel, $docenteModel) : null;
     }
@@ -56,7 +56,7 @@ class EloquentDocenteRepository implements DocenteRepositoryInterface
 
         if (!$docenteModel) return null;
 
-        $userModel = UserModel::find($docenteModel->user_id);
+        $userModel = UserModel::find($docenteModel->id);
 
         return $userModel ? $this->toDomain($userModel, $docenteModel) : null;
     }
@@ -82,15 +82,15 @@ class EloquentDocenteRepository implements DocenteRepositoryInterface
             $userModel->first_name,
             $userModel->last_name,
             (int) $userModel->dni,
-            $userModel->telephone,
-            $userModel->address,
             $userModel->password,
-            UserName::fromString($docenteModel->username),
+            $docenteModel->telephone,
+            $userModel->username,
             FechaFormateada::fromDatabase(
                 $docenteModel->fecha_ingreso instanceof \DateTimeInterface
                     ? $docenteModel->fecha_ingreso->format('Y-m-d')
                     : $docenteModel->fecha_ingreso
             ),
+            $docenteModel->curso_division_turno_id ? $docenteModel->curso_division_turno_id : null
         );
     }
 }

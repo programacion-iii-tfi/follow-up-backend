@@ -2,10 +2,11 @@
 
 namespace App\Infrastructure\User\Persistence;
 
+use App\Domain\User\Entities\Alumno;
+use App\Domain\User\ValueObjects\UserId;
+use App\Infrastructure\User\Persistence\Eloquent\EloquentAlumnoRepository;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class AlumnoModel extends Model
 {
@@ -14,25 +15,31 @@ class AlumnoModel extends Model
     protected $table = 'alumnos';
 
     public $incrementing = false;
-
     protected $keyType = 'string';
 
     protected $fillable = [
         'id',
-        'user_id',
-        'username',
-        'education_level',
-        'anio_ingreso',
-        'codigo_institucional',
+        'fecha_nacimiento',
+        'curso_division_turno_id',
     ];
 
-    public function user(): BelongsTo
+    protected $casts = [
+        'fecha_nacimiento' => 'date',
+    ];
+
+    public function user()
     {
-        return $this->belongsTo(UserModel::class, 'user_id');
+        return $this->belongsTo(UserModel::class, 'id', 'id');
     }
 
-    public function tutores(): BelongsToMany
+    public function cursoDivisionTurno()
     {
-        return $this->belongsToMany(TutorModel::class, 'tutor_alumno', 'alumno_id', 'tutor_id');
+        return $this->belongsTo(CursoDivisionTurnoModel::class, 'curso_division_turno_id', 'id');
+    }
+
+    public function toDomain(): Alumno
+    {
+        return app(EloquentAlumnoRepository::class)
+            ->findById(new UserId($this->id));
     }
 }

@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Application\Docente\UseCases;
+namespace App\Application\Tutor\UseCases;
 
 use App\Domain\User\Entities\Docente;
-use App\Domain\User\Repositories\DocenteRepositoryInterface;
 use App\Domain\User\Repositories\TutorRepositoryInterface;
 
 class GetAllTutoresUseCase

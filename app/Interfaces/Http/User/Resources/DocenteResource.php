@@ -22,7 +22,6 @@ class DocenteResource extends JsonResource
             'last_name'           => $docente->lastName(),
             'dni'                 => $docente->dni(),
             'telephone'           => $docente->telephone(),
-            'address'             => $docente->address(),
             'username'            => $docente->username(),
             'fecha_ingreso'       => $docente->fechaIngreso()->toDisplay(),
         ];

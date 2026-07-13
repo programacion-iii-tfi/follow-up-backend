@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('docentes', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
-            $table->string('username')->unique();
-            $table->date('fecha_ingreso');
-            $table->timestamps();
+        Schema::table('materias', function (Blueprint $table) {
+            $table->unique(['nombre', 'turno']);
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('docentes');
+        Schema::table('materias', function (Blueprint $table) {
+            $table->dropUnique(['nombre', 'turno']);
+        });
     }
 };
