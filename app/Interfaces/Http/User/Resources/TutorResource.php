@@ -22,7 +22,7 @@ class TutorResource extends JsonResource
             'last_name'           => $tutor->lastName(),
             'dni'                 => $tutor->dni(),
             'telephone'           => $tutor->telephone() ?? '',
-            'user_email'          => $tutor->email()->value() ?? '',
+            'email'               => $tutor->email()?->value() ?? '',
         ];
     }
 }

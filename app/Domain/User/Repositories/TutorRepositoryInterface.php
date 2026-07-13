@@ -13,4 +13,5 @@ interface TutorRepositoryInterface
     public function findByUsername(string $username): ?Tutor;
     public function all(): array;
     public function delete(UserId $id): void;
+    public function totalTutores(): int;
 }

@@ -29,7 +29,7 @@ class EloquentTutorRepository implements TutorRepositoryInterface
         $tutorModel = TutorModel::updateOrCreate(
             ['id' => $userModel->id],
             [
-                'email'         => $tutor->email(),
+                'email'         => $tutor->email()?->value(),
                 'telephone'     => $tutor->telephone()
             ]
         );
@@ -84,6 +84,11 @@ class EloquentTutorRepository implements TutorRepositoryInterface
         TutorModel::destroy($id->value());
     }
 
+    public function totalTutores(): int
+    {
+        return TutorModel::count();
+    }
+
     private function toDomain(UserModel $userModel, TutorModel $tutorModel): Tutor
     {
         return new Tutor(
@@ -92,7 +97,9 @@ class EloquentTutorRepository implements TutorRepositoryInterface
             $userModel->last_name,
             (int) $userModel->dni,
             $tutorModel->telephone,
-            null
+            $tutorModel->email
+                ? new UserEmail($tutorModel->email)
+                : null
         );
     }
 }

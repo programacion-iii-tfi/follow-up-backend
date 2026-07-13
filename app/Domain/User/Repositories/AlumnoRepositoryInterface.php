@@ -14,4 +14,5 @@ interface AlumnoRepositoryInterface
     public function all(): array;
     public function destroy(UserId $id): void;
     public function findByCodigoInstitucional(CodigoInstitucional $codigoInstitucional): ?Alumno;
+    public function totalAlumnos(): int;
 }

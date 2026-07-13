@@ -61,12 +61,16 @@ Route::prefix('v1')->group(function () {
         // El propio tutor o un admin pueden ver el detalle y los alumnos asociados
         Route::middleware('role:administrador,tutor')->group(function () {
             Route::get('tutores/{id}', [TutorController::class, 'show']);
+            Route::get('tutores/dni/{dni}', [TutorController::class, 'findByDni']);
             Route::get('tutores/{id}/alumnos', [TutorController::class, 'alumnos']);
         });
 
         // ── Admins ──
         // Solo un Admin gestiona otros admins (salvo el registro público ya definido arriba)
         Route::middleware('role:administrador')->group(function () {
+            Route::get('admins/estadisticas', [AdminController::class, 'statistics']);
+            Route::get('admins/{id}', [AdminController::class, 'show']);
+            Route::get('admins', [AdminController::class, 'index']);
             Route::apiResource('admins', AdminController::class);
         });
     });

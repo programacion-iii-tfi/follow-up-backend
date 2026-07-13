@@ -20,6 +20,7 @@ class MateriaResource extends JsonResource
             'id'                  => $materia->id(),
             'nombre'              => $materia->nombre(),
             'descripcion'         => $materia->descripcion(),
+            'turno'               => $materia->turno()->value,
         ];
     }
 }

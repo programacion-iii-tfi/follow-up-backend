@@ -83,6 +83,11 @@ class EloquentAlumnoRepository implements AlumnoRepositoryInterface
         return $userModel ? $this->toDomain($userModel, $alumnoModel) : null;
     }
 
+    public function totalAlumnos(): int
+    {
+        return AlumnoModel::count();
+    }
+
     private function toDomain(UserModel $userModel, AlumnoModel $alumnoModel): Alumno
     {
         $cdtModel = $alumnoModel->cursoDivisionTurno; // relación belongsTo, asumida en AlumnoModel

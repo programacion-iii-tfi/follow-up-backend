@@ -33,6 +33,9 @@ class LoginUserUseCase
         return [
             'token' => $token,
             'rol'   => $user->role()->value,
+            'first_name' => $user->firstName(),
+            'last_name' => $user->lastName(),
+            'username' => $user->username(),
         ];
     }
 }
