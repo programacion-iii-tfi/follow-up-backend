@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Infrastructure\User\Persistence;
+
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
+
+class TutorAlumnoModel extends Model
+{
+    use HasUuids;
+
+    protected $table = 'tutor_alumno';
+
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    protected $fillable = [
+        'id',
+        'alumno_id',
+        'tutor_id',
+        'relationship',
+        'otra_relacion',
+        'codigo_institucional',
+    ];
+
+    public function alumno()
+    {
+        return $this->belongsTo(AlumnoModel::class, 'alumno_id', 'id');
+    }
+
+    public function tutor()
+    {
+        return $this->belongsTo(TutorModel::class, 'tutor_id', 'id');
+    }
+}

@@ -7,7 +7,7 @@ class LoginUserDTO
     public function __construct(
         public readonly string $username,
         public readonly string $password,
-        public readonly string $role,
+        // public readonly string $role,sin role, solo user y pass
     ) {}
 
     public static function fromArray(array $data): self
@@ -15,7 +15,7 @@ class LoginUserDTO
         return new self(
             username: $data['username'],
             password: $data['password'],
-            role:     $data['role']
+            // role:     $data['role']
         );
     }
 }

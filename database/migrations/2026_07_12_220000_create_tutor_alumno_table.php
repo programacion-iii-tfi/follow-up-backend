@@ -11,13 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tutores', function (Blueprint $table) {
+        Schema::create('tutor_alumno', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
-            $table->string('email')->unique();
+
+            $table->foreignUuid('alumno_id')->constrained('alumnos')->cascadeOnDelete();
+            $table->foreignUuid('tutor_id')->constrained('tutores')->cascadeOnDelete();
+
             $table->string('relationship');
             $table->string('otra_relacion')->nullable();
+            $table->string('codigo_institucional');
+
             $table->timestamps();
+
+            $table->unique(['alumno_id', 'tutor_id']);
         });
     }
 
@@ -26,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tutores');
+        Schema::dropIfExists('tutor_alumno');
     }
 };

@@ -2,19 +2,20 @@
 
 namespace App\Infrastructure\User\Persistence;
 
-use App\Domain\User\ValueObjects\UserRole;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Notifications\Notifiable;
 
 class UserModel extends Authenticatable
 {
-    use HasApiTokens, HasUuids;
+    use HasApiTokens;
+    use HasUuids;
+    use Notifiable;
 
     protected $table = 'users';
 
     public $incrementing = false;
-
     protected $keyType = 'string';
 
     protected $fillable = [
@@ -22,8 +23,7 @@ class UserModel extends Authenticatable
         'first_name',
         'last_name',
         'dni',
-        'telephone',
-        'address',
+        'username',
         'password',
         'role',
         'must_change_password',
@@ -34,12 +34,23 @@ class UserModel extends Authenticatable
         'remember_token',
     ];
 
-    protected function casts(): array
+    protected $casts = [
+        'dni' => 'integer',
+        'must_change_password' => 'boolean',
+    ];
+
+    public function alumno()
     {
-        return [
-            'password'             => 'hashed',
-            'role'                 => UserRole::class,
-            'must_change_password' => 'boolean',
-        ];
+        return $this->hasOne(AlumnoModel::class, 'id', 'id');
+    }
+
+    public function docente()
+    {
+        return $this->hasOne(DocenteModel::class, 'id', 'id');
+    }
+
+    public function tutor()
+    {
+        return $this->hasOne(TutorModel::class, 'id', 'id');
     }
 }

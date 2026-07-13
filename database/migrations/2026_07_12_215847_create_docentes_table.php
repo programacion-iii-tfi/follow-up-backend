@@ -13,9 +13,14 @@ return new class extends Migration
     {
         Schema::create('docentes', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
-            $table->string('username')->unique();
+            $table->foreign('id')->references('id')->on('users')->cascadeOnDelete();
+
+            $table->string('telephone', 20);
             $table->date('fecha_ingreso');
+            $table->foreignId('curso_division_turno_id')
+                ->constrained('curso_division_turno')
+                ->restrictOnDelete();
+
             $table->timestamps();
         });
     }

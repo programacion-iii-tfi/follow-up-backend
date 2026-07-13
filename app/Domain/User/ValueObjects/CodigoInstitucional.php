@@ -8,44 +8,30 @@ class CodigoInstitucional
 {
     private string $value;
 
-    public function __construct()
+    // 💡 Hacemos que reciba el valor opcionalmente en el constructor
+    public function __construct(?string $value = null)
     {
-        $codigoInst = $this->generateCodigo();
+        // Si no se provee un valor, se autogenera (caso de creación de un Alumno nuevo)
+        $codigoInst = $value ?? $this->generateCodigo();
 
-        if (empty($codigoInst)) {
+        if (empty(trim($codigoInst))) {
             throw new InvalidArgumentException('El código institucional no puede estar vacío');
         }
 
         $this->value = $codigoInst;
     }
 
+    // 💡 Ahora el Named Constructor es súper simple y no necesita Reflection
     public static function fromString(string $value): self
     {
-        if (empty(trim($value))) {
-            throw new InvalidArgumentException('El código institucional no puede estar vacío');
-        }
-
-        // Evita pasar por el constructor normal, que siempre genera un código nuevo
-        $instance = (new \ReflectionClass(self::class))->newInstanceWithoutConstructor();
-        $instance->value = $value;
-
-        return $instance;
+        return new self($value);
     }
 
-    public function value(): string
-    {
-        return $this->value;
-    }
+    public function value(): string { return $this->value; }
 
-    public function equals(self $other): bool
-    {
-        return $this->value === $other->value;
-    }
+    public function equals(self $other): bool { return $this->value === $other->value; }
 
-    public function __toString(): string
-    {
-        return $this->value;
-    }
+    public function __toString(): string { return $this->value; }
 
     private function generateCodigo(): string
     {

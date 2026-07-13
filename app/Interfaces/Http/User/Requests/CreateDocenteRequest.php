@@ -18,8 +18,8 @@ class CreateDocenteRequest extends FormRequest
             'last_name'           => ['required', 'string', 'max:255'],
             'dni'                 => ['required', 'integer', 'unique:users,dni'],
             'telephone'           => ['required', 'string', 'max:20'],
-            'address'             => ['required', 'string', 'max:255'],
             'fecha_ingreso'       => ['required', 'string', 'max:12'],
+            'curso_division_turno_id' => ['required', 'integer', 'exists:curso_division_turno,id']
         ];
     }
 }

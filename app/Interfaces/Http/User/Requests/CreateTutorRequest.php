@@ -14,14 +14,9 @@ class CreateTutorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name'          => ['required', 'string', 'max:255'],
-            'last_name'           => ['required', 'string', 'max:255'],
-            'dni'                 => ['required', 'integer', 'unique:users,dni'],
-            'telephone'           => ['required', 'string', 'max:20'],
-            'address'             => ['required', 'string', 'max:255'],
-            'user_email'          => ['required', 'string', 'max:255'],
-            'relacion'            => ['required', 'string', 'max:10'],
-            'otra_relacion'       => ['required', 'string', 'max:50'],
+            'codigo_institucional' => ['required', 'string', 'max:50'],
+            'email'                => ['required', 'string', 'email', 'max:255', 'unique:tutores,email'],
+            'password'             => ['required', 'string', 'min:8'],
         ];
     }
 }

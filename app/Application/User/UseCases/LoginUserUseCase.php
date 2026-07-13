@@ -18,23 +18,11 @@ class LoginUserUseCase
 
     public function execute(LoginUserDTO $dto): array
     {
-        $role = UserRole::from($dto->role); // lanza ValueError si el string no es un caso válido
-
-        $user = $role === UserRole::TUTOR
-            ? $this->userRepository->findByEmail(new UserEmail($dto->username))
-            : $this->userRepository->findByUsername($dto->username, $role);
+        $user = $this->userRepository->findByUsername($dto->username);
 
         if (!$user || !Hash::check($dto->password, $user->password())) {
             throw ValidationException::withMessages([
                 'username' => ['Las credenciales son incorrectas.'],
-            ]);
-        }
-
-        // Importante: evita que alguien loguee con role=ADMINISTRADOR
-        // usando el username de un ALUMNO, si coincidiera por algún motivo.
-        if ($user->role() !== $role) {
-            throw ValidationException::withMessages([
-                'role' => ['El rol indicado no corresponde al usuario.'],
             ]);
         }
 

@@ -4,6 +4,7 @@ namespace App\Infrastructure\User\Persistence\Eloquent;
 
 use App\Domain\User\Entities\Tutor;
 use App\Domain\User\Repositories\TutorRepositoryInterface;
+use App\Domain\User\ValueObjects\UserEmail;
 use App\Domain\User\ValueObjects\UserId;
 use App\Infrastructure\User\Persistence\TutorModel;
 use App\Infrastructure\User\Persistence\UserModel;
@@ -18,20 +19,18 @@ class EloquentTutorRepository implements TutorRepositoryInterface
                 'first_name'           => $tutor->firstName(),
                 'last_name'            => $tutor->lastName(),
                 'dni'                  => $tutor->dni(),
-                'telephone'            => $tutor->telephone(),
-                'address'              => $tutor->address(),
                 'password'             => $tutor->password(),
+                'telephone'            => $tutor->telephone(),
                 'role'                 => $tutor->role()->value,
                 'must_change_password' => $tutor->mustChangePassword(),
             ]
         );
 
         $tutorModel = TutorModel::updateOrCreate(
-            ['user_id' => $userModel->id],
+            ['id' => $userModel->id],
             [
                 'email'         => $tutor->email(),
-                'relacion'      => $tutor->relationship(),
-                'otra_relacion' => $tutor->otraRelacion()
+                'telephone'     => $tutor->telephone()
             ]
         );
 
@@ -44,7 +43,18 @@ class EloquentTutorRepository implements TutorRepositoryInterface
 
         if (!$userModel) return null;
 
-        $tutorModel = TutorModel::where('user_id', $userModel->id)->first();
+        $tutorModel = TutorModel::where('id', $userModel->id)->first();
+
+        return $tutorModel ? $this->toDomain($userModel, $tutorModel) : null;
+    }
+
+    public function findByDni(int $dni): ?Tutor
+    {
+        $userModel = UserModel::where('dni', $dni)->first();
+
+        if (!$userModel) return null;
+
+        $tutorModel = TutorModel::where('id', $userModel->id)->first();
 
         return $tutorModel ? $this->toDomain($userModel, $tutorModel) : null;
     }
@@ -55,7 +65,7 @@ class EloquentTutorRepository implements TutorRepositoryInterface
 
         if (!$tutorModel) return null;
 
-        $userModel = UserModel::find($tutorModel->user_id);
+        $userModel = UserModel::find($tutorModel->id);
 
         return $userModel ? $this->toDomain($userModel, $tutorModel) : null;
     }
@@ -81,12 +91,8 @@ class EloquentTutorRepository implements TutorRepositoryInterface
             $userModel->first_name,
             $userModel->last_name,
             (int) $userModel->dni,
-            $userModel->telephone,
-            $userModel->address,
-            $userModel->password,
-            $tutorModel->email,
-            $tutorModel->relacion,
-            $tutorModel->otra_relacion
+            $tutorModel->telephone,
+            null
         );
     }
 }

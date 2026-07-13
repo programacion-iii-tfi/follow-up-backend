@@ -65,4 +65,9 @@ class FechaFormateada
         $instance->fecha = $parsed;
         return $instance;
     }
+
+    public static function fromString(string $fecha): self
+    {
+        return new self($fecha);
+    }
 }

@@ -14,13 +14,13 @@ class Docente extends User
         string $first_name,
         string $last_name,
         int $dni,
-        string $telephone,
-        string $address,
+        string $username,
         string $password,
-        private UserName $username,
+        private string $telephone,
         private FechaFormateada $fecha_ingreso,
+        private int $curso_division_turno_id,
     ) {
-        parent::__construct($id, $first_name, $last_name, $dni, $telephone, $address, $password, UserRole::DOCENTE, true);
+        parent::__construct($id, $first_name, $last_name, $dni, $username, $password, UserRole::DOCENTE, true);
     }
 
     public function fechaIngreso(): FechaFormateada { return $this->fecha_ingreso; }
@@ -30,12 +30,17 @@ class Docente extends User
         $this->fecha_ingreso = new FechaFormateada($fecha);
     }
 
-    public function username(): string { return $this->username->value(); }
+    public function telephone(): string { return $this->telephone;}
 
-    public function setUsername(string $dni, string $fecha_ingreso): void
+    public function setTelephone(string $telephone): void { 
+        $this->telephone =  $telephone;
+    }
+
+    public function cursoDivisionTurno(): int { return $this->curso_division_turno_id; }
+
+    public function setCursoDivisionTurno(int $curso_division_turno_id): void
     {
-        $anio = date("Y", strtotime($fecha_ingreso));
-        $this->username = new UserName('DOC', $dni, strval($anio));
+        $this->curso_division_turno_id = $curso_division_turno_id;
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\User\Persistence\Eloquent;
 
+use App\Domain\Shared\ValueObjects\FechaFormateada;
 use App\Domain\User\Entities\Alumno;
 use App\Domain\User\Repositories\AlumnoRepositoryInterface;
 use App\Domain\User\ValueObjects\CodigoInstitucional;
@@ -19,22 +20,19 @@ class EloquentAlumnoRepository implements AlumnoRepositoryInterface
             [
                 'first_name'           => $alumno->firstName(),
                 'last_name'            => $alumno->lastName(),
+                'username'             => $alumno->username(),
                 'password'             => $alumno->password(),
                 'dni'                  => $alumno->dni(),
-                'telephone'            => $alumno->telephone(),
-                'address'              => $alumno->address(),
                 'role'                 => $alumno->role()->value,
                 'must_change_password' => $alumno->mustChangePassword(),
             ]
         );
 
         $alumnoModel = AlumnoModel::updateOrCreate(
-            ['user_id' => $userModel->id],
+            ['id' => $userModel->id],
             [
-                'username'              => $alumno->username(),
-                'education_level'       => $alumno->educationLevel(),
-                'anio_ingreso'          => $alumno->anioIngreso(),
-                'codigo_institucional'  => $alumno->codigoInstitucional(),
+                'fecha_nacimiento'         => $alumno->fechaNacimiento()->toDatabase(),
+                'curso_division_turno_id'  => $alumno->cursoDivisionTurno()->id(),
             ]
         );
 
@@ -44,30 +42,28 @@ class EloquentAlumnoRepository implements AlumnoRepositoryInterface
     public function findById(UserId $id): ?Alumno
     {
         $userModel = UserModel::find($id->value());
-
         if (!$userModel) return null;
 
-        $alumnoModel = AlumnoModel::where('user_id', $userModel->id)->first();
+        $alumnoModel = AlumnoModel::find($userModel->id);
 
         return $alumnoModel ? $this->toDomain($userModel, $alumnoModel) : null;
     }
 
     public function findByUsername(string $username): ?Alumno
     {
-        $alumnoModel = AlumnoModel::where('username', $username)->first();
+        $userModel = UserModel::where('username', $username)->first();
+        if (!$userModel) return null;
 
-        if (!$alumnoModel) return null;
+        $alumnoModel = AlumnoModel::find($userModel->id);
 
-        $userModel = UserModel::find($alumnoModel->user_id);
-
-        return $userModel ? $this->toDomain($userModel, $alumnoModel) : null;
+        return $alumnoModel ? $this->toDomain($userModel, $alumnoModel) : null;
     }
 
     public function all(): array
     {
         return AlumnoModel::with('user')
             ->get()
-            ->map(fn(AlumnoModel $model) => $this->toDomain($model->user, $model))
+            ->map(fn (AlumnoModel $model) => $this->toDomain($model->user, $model))
             ->toArray();
     }
 
@@ -77,20 +73,39 @@ class EloquentAlumnoRepository implements AlumnoRepositoryInterface
         UserModel::destroy($id->value());
     }
 
+    public function findByCodigoInstitucional(CodigoInstitucional $codigoInstitucional): ?Alumno
+    {
+        $alumnoModel = AlumnoModel::where('codigo_institucional', $codigoInstitucional->value())->first();
+        if (!$alumnoModel) return null;
+
+        $userModel = UserModel::find($alumnoModel->id);
+
+        return $userModel ? $this->toDomain($userModel, $alumnoModel) : null;
+    }
+
     private function toDomain(UserModel $userModel, AlumnoModel $alumnoModel): Alumno
     {
+        $cdtModel = $alumnoModel->cursoDivisionTurno; // relación belongsTo, asumida en AlumnoModel
+
+        if ($cdtModel === null) {
+            throw new \RuntimeException(
+                "Alumno {$userModel->id} no tiene curso_division_turno asociado (integridad referencial rota)."
+            );
+        }
+
         return new Alumno(
-            id:                   new UserId($userModel->id),
-            first_name:           $userModel->first_name,
-            last_name:            $userModel->last_name,
-            password:             $userModel->password,
-            dni:                  (int) $userModel->dni,
-            telephone:            $userModel->telephone,
-            address:              $userModel->address,
-            username:             UserName::fromString($alumnoModel->username),
-            anio_ingreso:         (int) $alumnoModel->anio_ingreso,
-            codigo_institucional: CodigoInstitucional::fromString($alumnoModel->codigo_institucional),
-            education_level:      $alumnoModel->education_level,
+            new UserId($userModel->id),
+            $userModel->first_name,
+            $userModel->last_name,
+            (int) $userModel->dni,
+            $userModel->password,
+            UserName::fromString($userModel->username),
+            FechaFormateada::fromDatabase(
+                $alumnoModel->fecha_nacimiento instanceof \DateTimeInterface
+                    ? $alumnoModel->fecha_nacimiento->format('Y-m-d')
+                    : $alumnoModel->fecha_nacimiento
+            ),
+            $cdtModel->toDomain(),
         );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Domain\User\Entities;
 
+use App\Domain\Shared\ValueObjects\FechaFormateada;
 use App\Domain\User\ValueObjects\UserId;
 use App\Domain\User\ValueObjects\UserName;
 use App\Domain\User\ValueObjects\UserRole;
@@ -14,42 +15,32 @@ class Alumno extends User
         string $first_name,
         string $last_name,
         int $dni,
-        string $telephone,
-        string $address,
         string $password,
         private UserName $username,
-        private int $anio_ingreso,
-        private CodigoInstitucional $codigo_institucional,
-        private string $education_level,
+        private FechaFormateada $fecha_nacimiento,
+        private CursoDivisionTurno $curso_division_turno,
     ) {
-        parent::__construct($id, $first_name, $last_name, $dni, $telephone, $address, $password, UserRole::ALUMNO,true);
+        parent::__construct($id, $first_name, $last_name, $dni, $username->value(), $password, UserRole::ALUMNO, true);
     }
 
     public function username(): string { return $this->username->value(); }
 
-    public function anioIngreso(): int { return $this->anio_ingreso; }
+    public function fechaNacimiento(): FechaFormateada { return $this->fecha_nacimiento; }
 
-    public function codigoInstitucional(): string { return $this->codigo_institucional->value(); }
+    public function cursoDivisionTurno(): CursoDivisionTurno { return $this->curso_division_turno; }
 
-    public function educationLevel(): string { return $this->education_level; }
-
-    public function setUsername(int $dni, int $anio_ingreso): void
+    public function setUsername(string $dni, string $anio_ingreso): void
     {
-        $this->username = new UserName('EST',$dni,$anio_ingreso);
+        $this->username = new UserName('EST', $dni, $anio_ingreso);
     }
 
-    public function setAnioIngreso(int $anio_ingreso): void
+    public function setFechaNacimiento(FechaFormateada $fecha_nacimiento): void
     {
-        $this->anio_ingreso = $anio_ingreso;
+        $this->fecha_nacimiento = $fecha_nacimiento;
     }
 
-    public function setCodigoInstitucional(CodigoInstitucional $codigo_institucional): void
+    public function setCursoDivisionTurno(CursoDivisionTurno $curso_division_turno): void
     {
-        $this->codigo_institucional = $codigo_institucional;
-    }
-
-    public function setEducationLevel(string $education_level): void
-    {
-        $this->education_level = $education_level;
+        $this->curso_division_turno = $curso_division_turno;
     }
 }

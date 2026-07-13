@@ -12,9 +12,8 @@ class User
         private string  $first_name,
         private string  $last_name,
         private ?int $dni,
-        private ?string $telephone,
-        private ?string  $address,
-        private string  $password,
+        private ?string  $username,
+        private ?string  $password,
         private readonly UserRole $role,
         private bool $must_change_password,
     ) {}
@@ -39,17 +38,12 @@ class User
         return $this->dni;
     }
 
-    public function telephone(): ?string
+    public function username(): ?string
     {
-        return $this->telephone;
+        return $this->username;
     }
 
-    public function address(): ?string
-    {
-        return $this->address;
-    }
-
-    public function password(): string
+    public function password(): ?string
     {
         return $this->password;
     }
@@ -84,12 +78,21 @@ class User
         return $this->role === UserRole::ALUMNO;
     }
 
-    public function updateUser(string $first_name, string $last_name, ?int $dni, ?string $telephone, ?string $address): void
+    public function updateUser(string $first_name, string $last_name, ?int $dni): void
     {
         $this->first_name = $first_name;
         $this->last_name = $last_name;
         $this->dni = $dni;
-        $this->telephone = $telephone;
-        $this->address = $address;
+    }
+
+    public function updateUsername(string $username): void
+    {
+        $this->username = $username;
+    }
+
+    public function updatePassword(string $password, bool $must_change_password): void
+    {
+        $this->password = $password;
+        $this->must_change_password = $must_change_password;
     }
 }

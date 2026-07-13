@@ -2,7 +2,7 @@
 
 namespace App\Interfaces\Http\User\Controllers;
 
-use App\Application\Docente\UseCases\GetAllTutoresUseCase;
+use App\Application\Tutor\UseCases\GetAllTutoresUseCase;
 use App\Application\Tutor\DTOs\RegisterTutorDTO;
 use App\Application\Tutor\UseCases\RegisterTutorUseCase;
 use App\Interfaces\Http\Controller;
@@ -17,7 +17,7 @@ class TutorController extends Controller
         private readonly GetAllTutoresUseCase $getAllTutoresUseCase,
     ) {}
 
-    public function store(CreateTutorRequest $request): JsonResponse
+    public function register(CreateTutorRequest $request): JsonResponse
     {
         $dto  = RegisterTutorDTO::fromArray($request->validated());
         $user = $this->registerTutorUseCase->execute($dto);
