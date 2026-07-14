@@ -1,0 +1,89 @@
+app/
+├── Application/
+│   ├── User/
+│   │   ├── DTOs/
+│   │   │   ├── CreateUserDTO.php
+│   │   │   └── LoginUserDTO.php
+│   │   └── UseCases/
+│   │       ├── CreateUserUseCase.php
+│   │       ├── LoginUserUseCase.php
+│   │       └── GetAllUsersUseCase.php
+│   ├── Alumno/
+│   │   ├── DTOs/
+│   │   │   └── CreateAlumnoDTO.php
+│   │   └── UseCases/
+│   │       ├── CreateAlumnoUseCase.php
+│   │       └── GetAllAlumnosUseCase.php
+│   ├── Docente/
+│   │   ├── DTOs/
+│   │   │   └── CreateDocenteDTO.php
+│   │   └── UseCases/
+│   │       ├── CreateDocenteUseCase.php
+│   │       └── GetAllDocentesUseCase.php
+│   └── Tutor/
+│       ├── DTOs/
+│       │   └── RegisterTutorDTO.php
+│       └── UseCases/
+│           ├── RegisterTutorUseCase.php
+│           └── GetAllTutoresUseCase.php
+│
+├── Domain/
+│   ├── User/
+│   │   ├── Entities/
+│   │   │   ├── User.php           ← abstract base
+│   │   │   ├── Alumno.php
+│   │   │   ├── Docente.php
+|   |   |   ├── TutorAlumno.php
+│   │   │   └── Tutor.php
+│   │   ├── Repositories/
+│   │   │   ├── UserRepositoryInterface.php
+│   │   │   ├── AlumnoRepositoryInterface.php
+│   │   │   ├── DocenteRepositoryInterface.php
+│   │   │   └── TutorRepositoryInterface.php
+│   │   └── ValueObjects/
+│   │       ├── UserId.php
+│   │       ├── UserName.php
+│   │       ├── UserEmail.php
+│   │       ├── UserRole.php
+│   │       ├── UserUsername.php   ← EST-DNI-AÑO / DOC-DNI-AÑO
+│   │       └── CodigoInstitucional.php
+│   │
+├── Infrastructure/
+│   ├── User/
+│   │   └── Persistence/
+│   │       ├── UserModel.php
+│   │       ├── AlumnoModel.php
+│   │       ├── DocenteModel.php
+│   │       ├── TutorModel.php
+│   │       └── Eloquent/
+│   │           ├── EloquentUserRepository.php
+│   │           ├── EloquentAlumnoRepository.php
+│   │           ├── EloquentDocenteRepository.php
+│   │           └── EloquentTutorRepository.php
+│   └── Providers/
+│       ├── UserServiceProvider.php
+│       ├── AlumnoServiceProvider.php
+│       ├── DocenteServiceProvider.php
+│       └── TutorServiceProvider.php
+│
+└── Interfaces/
+    └── Http/
+        ├── Controller.php
+        └── User/
+            ├── Controllers/
+            │   ├── UserController.php
+            │   ├── AlumnoController.php
+            │   ├── DocenteController.php
+            │   ├── TutorController.php
+            │   └── AuthController.php
+            ├── Requests/
+            │   ├── CreateUserRequest.php
+            │   ├── CreateAlumnoRequest.php
+            │   ├── CreateDocenteRequest.php
+            │   ├── RegisterTutorRequest.php
+            │   └── LoginRequest.php
+            └── Resources/
+                ├── UserResource.php
+                ├── AlumnoResource.php
+                ├── DocenteResource.php
+                └── TutorResource.php
