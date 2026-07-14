@@ -5,10 +5,13 @@ namespace App\Interfaces\Http\User\Controllers;
 use App\Application\Tutor\UseCases\GetAllTutoresUseCase;
 use App\Application\Tutor\DTOs\RegisterTutorDTO;
 use App\Application\Tutor\UseCases\RegisterTutorUseCase;
+use App\Domain\User\Repositories\AlumnoRepositoryInterface;
+use App\Domain\User\Repositories\TutorAlumnoRepositoryInterface;
 use App\Domain\User\Repositories\TutorRepositoryInterface;
 use App\Domain\User\ValueObjects\UserId;
 use App\Interfaces\Http\Controller;
 use App\Interfaces\Http\User\Requests\CreateTutorRequest;
+use App\Interfaces\Http\User\Resources\AlumnoResource;
 use App\Interfaces\Http\User\Resources\TutorResource;
 use Illuminate\Http\JsonResponse;
 
@@ -17,7 +20,9 @@ class TutorController extends Controller
     public function __construct(
         private readonly RegisterTutorUseCase  $registerTutorUseCase,
         private readonly GetAllTutoresUseCase $getAllTutoresUseCase,
-        private readonly TutorRepositoryInterface $tutorRepository
+        private readonly TutorRepositoryInterface $tutorRepository,
+        private readonly TutorAlumnoRepositoryInterface $tutorAlumnoRepository,
+        private readonly AlumnoRepositoryInterface $alumnoRepository,
     ) {}
 
     public function register(CreateTutorRequest $request): JsonResponse
@@ -62,5 +67,27 @@ class TutorController extends Controller
         }
 
         return response()->json(new TutorResource($tutor));
+    }
+
+    public function validateCode(string $codigo): JsonResponse
+    {
+
+        if (!$codigo) {
+            return response()->json(['message' => 'Código no proporcionado'], 400);
+        }
+
+        $tutorAlumno = $this->tutorAlumnoRepository->findPreRegistroPendiente($codigo);
+
+        if (!$tutorAlumno) {
+            return response()->json(['message' => 'Código inválido'], 404);
+        }
+
+        $alumno = $this->alumnoRepository->findById($tutorAlumno->alumnoId());
+
+        if (!$alumno) {
+            return response()->json(['message' => 'Código inválido'], 404);
+        }
+
+        return response()->json(new AlumnoResource($alumno));
     }
 }

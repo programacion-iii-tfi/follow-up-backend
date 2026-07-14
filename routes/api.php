@@ -15,6 +15,7 @@ Route::prefix('v1')->group(function () {
     // Públicas
     Route::post('login', [AuthController::class, 'login']);
     Route::post('users', [UserController::class, 'store']);
+    Route::get('tutores/validarCodigo/{codigo}', [TutorController::class, 'validateCode']);
     Route::post('tutores/register', [TutorController::class, 'register']);
     Route::post('admins/register', [AdminController::class, 'store']);
 
